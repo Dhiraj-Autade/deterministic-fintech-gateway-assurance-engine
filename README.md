@@ -45,7 +45,7 @@ In simple terms, it turns transaction testing into a controlled safety gate inst
   Teams immediately learn whether the backend service is dead or whether the web page itself has a problem.
 
 ## Section 3: Pipeline Architecture
-<img width="465" height="771" alt="image" src="https://github.com/user-attachments/assets/bd8cb8d6-598d-4839-b29a-24311d447da7" />
+<img width="464" height="755" alt="image" src="https://github.com/user-attachments/assets/c67632d9-2a15-4957-bb1c-56fee939eca6" />
 
 ```text
 1) Data Matrices
