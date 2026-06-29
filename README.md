@@ -44,7 +44,8 @@ In simple terms, it turns transaction testing into a controlled safety gate inst
   **Real-World Utility**  
   Teams immediately learn whether the backend service is dead or whether the web page itself has a problem.
 
-## Section 3: Text-Based Graphical Pipeline Architecture
+## Section 3: Pipeline Architecture
+<img width="465" height="771" alt="image" src="https://github.com/user-attachments/assets/bd8cb8d6-598d-4839-b29a-24311d447da7" />
 
 ```text
 1) Data Matrices
