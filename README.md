@@ -2,6 +2,8 @@
 
 > A reliable automation safety gate for banking transaction testing.
 
+**Stack:** Java 11 | Selenium 4 | TestNG 7.9 | RestAssured 5.4 | ExtentReports 5.1
+
 ## Section 1: Project Overview
 
 The **Deterministic Fintech Gateway Assurance Engine** is a powerful test automation framework built with **Java, Selenium, TestNG, and RestAssured**.
@@ -11,6 +13,12 @@ Its purpose is to protect core banking transaction paths, reduce frustrating tes
 The framework checks data, validates backend health, drives a browser-based payment flow, and writes clear reports for the people who need to trust the result.
 
 In simple terms, it turns transaction testing into a controlled safety gate instead of a risky manual process.
+
+### Why this stands out
+
+- It focuses on reliability first, which is exactly what financial automation needs.
+- It separates test logic from test data, so the framework is easy to extend.
+- It gives both engineers and non-engineers a clear result through the HTML report.
 
 ## Section 2: Problem Statements vs. Implemented Solutions
 
@@ -118,3 +126,22 @@ That matters in real financial systems because it helps teams prove system avail
 It also saves money by stopping useless browser runs when the backend is already failing, which reduces cloud compute waste across large CI pipelines.
 
 For banks, payment teams, and digital wallet platforms, this kind of deterministic testing is not just helpful. It is a practical way to keep release quality, compliance confidence, and transaction reliability under control.
+
+### How to run it
+
+1. Open the project in a terminal at the repository root.
+2. Run `mvn clean test`.
+3. Open `test-output/index.html` to review the report.
+
+### What success looks like
+
+- Smoke scenarios pass quickly and confirm the core payment path is stable.
+- Regression scenarios cover more limits, currencies, and edge cases.
+- The report makes failures easy to trace back to data, backend health, or UI behavior.
+
+### Why the design works
+
+- Selenium handles the browser actions cleanly.
+- TestNG controls the suite order and data-driven execution.
+- RestAssured blocks dead backend runs early.
+- JSON files keep the test inputs simple to update.
