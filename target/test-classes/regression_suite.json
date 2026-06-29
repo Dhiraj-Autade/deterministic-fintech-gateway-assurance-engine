@@ -1,0 +1,12 @@
+[
+  {"scenarioName": "TC001_Standard_Base_Currency_Pass", "customerName": "Dhiraj Autade", "phoneNumber": "+12025550143", "amount": "1500", "currency": "USD", "simulationType": "NORMAL", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC002_Network_Core_Latency_Spike", "customerName": "John Doe", "phoneNumber": "+12025550198", "amount": "2500", "currency": "USD", "simulationType": "NETWORK_LAG", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC003_Regulatory_Gateway_Dropout", "customerName": "Jane Smith", "phoneNumber": "+12025550177", "amount": "50000", "currency": "USD", "simulationType": "GATEWAY_TIMEOUT", "expectedStatus": "Transaction Halted: Safaricom M-Pesa Gateway Timeout"},
+  {"scenarioName": "TC004_Cross_Border_Secondary_Currency_Pass", "customerName": "Alex Mercer", "phoneNumber": "+442079460192", "amount": "850", "currency": "EUR", "simulationType": "NORMAL", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC005_Cross_Border_Latency_Spike", "customerName": "Elena Rostova", "phoneNumber": "+442079460111", "amount": "1200", "currency": "EUR", "simulationType": "NETWORK_LAG", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC006_Secondary_Currency_Gateway_Dropout", "customerName": "Marcus Vance", "phoneNumber": "+442079460144", "amount": "31000", "currency": "EUR", "simulationType": "GATEWAY_TIMEOUT", "expectedStatus": "Transaction Halted: Safaricom M-Pesa Gateway Timeout"},
+  {"scenarioName": "TC007_Micro_Transaction_Boundary_Validation", "customerName": "Siddharth Rao", "phoneNumber": "+12025550122", "amount": "1", "currency": "USD", "simulationType": "NORMAL", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC008_High_Value_Volume_Limit_Check", "customerName": "Amara Diallo", "phoneNumber": "+12025550155", "amount": "999999", "currency": "USD", "simulationType": "NORMAL", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC009_High_Value_Volume_Latency_Spike", "customerName": "Kenji Tanaka", "phoneNumber": "+12025550166", "amount": "750000", "currency": "USD", "simulationType": "NETWORK_LAG", "expectedStatus": "Payment Successful"},
+  {"scenarioName": "TC010_System_Audit_Boundary_Dropout", "customerName": "Chloe Fraser", "phoneNumber": "+442079460188", "amount": "500000", "currency": "EUR", "simulationType": "GATEWAY_TIMEOUT", "expectedStatus": "Transaction Halted: Safaricom M-Pesa Gateway Timeout"}
+]

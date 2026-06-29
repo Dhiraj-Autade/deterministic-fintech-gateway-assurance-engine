@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>TestNG:  Phase 1 — Smoke Validation Matrix</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Phase 1 — Smoke Validation Matrix</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>4/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Mon Jun 29 09:09:32 IST 2026</td>
+</tr>
+<tr><td>Total time:</td><td>39 seconds (39787 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td><b>Attribute(s)</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='tests.FintechTestRunner.executeFintechPaymentScenario()'><b>executeFintechPaymentScenario</b><br>Test class: tests.FintechTestRunner<br>Parameters: TC-003, Compliance Drop, sk_live_51Nx8842US003, 400222, CustomerPayBillOnline, 12025551122, 15000000, INV-2026-US-HIGH-VALUE, GATEWAY_TIMEOUT, Response Code [504] Gateway Timeout - Mobile Money Network (MMN) Core Rail Unreachable, payment_data.json</td>
+<td></td>
+<td>4</td>
+<td>tests.FintechTestRunner@7ef82753</td></tr>
+<tr>
+<td title='tests.FintechTestRunner.executeFintechPaymentScenario()'><b>executeFintechPaymentScenario</b><br>Test class: tests.FintechTestRunner<br>Parameters: TC-002, Resilience Spike, sk_live_51Nx8842US002, 400222, CustomerPayBillOnline, 12025559876, 8750.5, INV-2026-US-002, NETWORK_LAG, Response Code [200] OK - Callback Received: [0] Success (Transaction Completed), payment_data.json</td>
+<td></td>
+<td>14</td>
+<td>tests.FintechTestRunner@7ef82753</td></tr>
+<tr>
+<td title='tests.FintechTestRunner.executeFintechPaymentScenario()'><b>executeFintechPaymentScenario</b><br>Test class: tests.FintechTestRunner<br>Parameters: TC-004, Cross-Border Validation, sk_live_51Nx2291EU004, 600100, CustomerBuyGoodsOnline, 4915123456789, 45000, INV-2026-EU-004, NORMAL, Response Code [200] OK - Callback Received: [0] Success (Transaction Completed), payment_data.json</td>
+<td></td>
+<td>4</td>
+<td>tests.FintechTestRunner@7ef82753</td></tr>
+<tr>
+<td title='tests.FintechTestRunner.executeFintechPaymentScenario()'><b>executeFintechPaymentScenario</b><br>Test class: tests.FintechTestRunner<br>Parameters: TC-001, Standard Pass, sk_live_51Nx8842US001, 400222, CustomerPayBillOnline, 12025551234, 2500, INV-2026-US-001, NORMAL, Response Code [200] OK - Callback Received: [0] Success (Transaction Completed), payment_data.json</td>
+<td></td>
+<td>7</td>
+<td>tests.FintechTestRunner@7ef82753</td></tr>
+</table><p>
+</body>
+</html>

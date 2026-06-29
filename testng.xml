@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Global Fintech Gateway Automation Suite" verbose="2">
+    <test name="Phase 1 — Smoke Validation Matrix">
+        <parameter name="suiteJsonPath" value="payment_data.json"/>
+        <classes>
+            <class name="tests.FintechTestRunner"/>
+        </classes>
+    </test>
+    <test name="Phase 2 — Boundary Regression Matrix">
+        <parameter name="suiteJsonPath" value="regression_suite.json"/>
+        <classes>
+            <class name="tests.FintechTestRunner"/>
+        </classes>
+    </test>
+</suite>

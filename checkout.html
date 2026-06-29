@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise Transaction Core Gateway</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#172033',
+                            950: '#0b1120',
+                        },
+                        enterprise: {
+                            green: '#006B3F',
+                            red: '#BB0000',
+                            gold: '#C5A572',
+                        },
+                    },
+                    fontFamily: {
+                        display: ['"Segoe UI"', 'system-ui', 'sans-serif'],
+                        mono: ['"Cascadia Code"', '"Fira Code"', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.45s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(12px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                    },
+                    boxShadow: {
+                        glow: '0 0 40px rgba(0, 107, 63, 0.15)',
+                        card: '0 25px 50px -12px rgba(0, 0, 0, 0.55)',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- React 18 CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            background: radial-gradient(ellipse at 20% 0%, #1e3a5f 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 100%, #0f2847 0%, transparent 45%),
+                        linear-gradient(160deg, #0b1120 0%, #111827 40%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        .field-input {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: rgba(0, 107, 63, 0.65);
+            box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.18);
+            background-color: rgba(15, 23, 42, 0.95);
+        }
+
+        .section-divider {
+            background: linear-gradient(90deg, transparent, rgba(197, 165, 114, 0.35), transparent);
+            height: 1px;
+        }
+
+        .btn-stk {
+            background: linear-gradient(135deg, #006B3F 0%, #00875a 50%, #005a34 100%);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+        }
+
+        .btn-stk:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 32px rgba(0, 107, 63, 0.35);
+            filter: brightness(1.06);
+        }
+
+        .btn-stk:active {
+            transform: translateY(0);
+        }
+
+        .status-loading {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+        }
+    </style>
+</head>
+<body class="font-display text-slate-100 antialiased">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const LOADING_MESSAGE =
+            'Initiate Digital Wallet Push Broadcast... Awaiting Customer PIN Entry on Device.';
+        const SUCCESS_MESSAGE =
+            'Response Code [200] OK - Callback Received: [0] Success (Transaction Completed)';
+        const TIMEOUT_MESSAGE =
+            'Response Code [504] Gateway Timeout - Mobile Money Network (MMN) Core Rail Unreachable';
+
+        function FieldLabel({ htmlFor, children, badge }) {
+            return (
+                <label htmlFor={htmlFor} className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    {children}
+                    {badge && (
+                        <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono normal-case text-enterprise-gold">
+                            {badge}
+                        </span>
+                    )}
+                </label>
+            );
+        }
+
+        function SectionHeader({ icon, title, subtitle }) {
+            return (
+                <div className="mb-6 animate-fade-in">
+                    <div className="mb-1 flex items-center gap-2">
+                        <span className="text-lg">{icon}</span>
+                        <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-200">{title}</h2>
+                    </div>
+                    <p className="text-xs text-slate-500">{subtitle}</p>
+                </div>
+            );
+        }
+
+        function PaymentGateway() {
+            const [status, setStatus] = useState({
+                visible: false,
+                message: '',
+                variant: 'idle',
+            });
+
+            useEffect(() => {
+                window.processPayment = function processPayment() {
+                    const simulationType = document.getElementById('simulationType').value;
+
+                    setStatus({
+                        visible: true,
+                        message: LOADING_MESSAGE,
+                        variant: 'loading',
+                    });
+
+                    if (simulationType === 'NORMAL') {
+                        setTimeout(() => {
+                            setStatus({
+                                visible: true,
+                                message: SUCCESS_MESSAGE,
+                                variant: 'success',
+                            });
+                        }, 300);
+                    } else if (simulationType === 'NETWORK_LAG') {
+                        setTimeout(() => {
+                            setStatus({
+                                visible: true,
+                                message: SUCCESS_MESSAGE,
+                                variant: 'success',
+                            });
+                        }, 10000);
+                    } else if (simulationType === 'GATEWAY_TIMEOUT') {
+                        setTimeout(() => {
+                            setStatus({
+                                visible: true,
+                                message: TIMEOUT_MESSAGE,
+                                variant: 'error',
+                            });
+                        }, 300);
+                    }
+                };
+
+                return () => {
+                    delete window.processPayment;
+                };
+            }, []);
+
+            const statusClasses = (() => {
+                if (!status.visible) return 'hidden';
+                const base = 'mt-8 animate-slide-up rounded-xl border px-5 py-4 text-sm leading-relaxed font-mono';
+                if (status.variant === 'loading') {
+                    return `${base} status-loading border-slate-600 text-slate-200 animate-pulse-slow`;
+                }
+                if (status.variant === 'success') {
+                    return `${base} border-emerald-500/40 bg-emerald-950/50 text-emerald-300 shadow-glow`;
+                }
+                if (status.variant === 'error') {
+                    return `${base} border-rose-500/40 bg-rose-950/50 text-rose-300`;
+                }
+                return `${base} hidden`;
+            })();
+
+            return (
+                <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-4 py-10 sm:px-6">
+                    {/* Header */}
+                    <header className="mb-8 animate-slide-up text-center">
+                        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-700/60 bg-slate-900/60 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400">
+                            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500"></span>
+                            Live Sandbox · Enterprise Core Rail
+                        </div>
+                        <h1 className="bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+                            Enterprise Transaction Core Gateway
+                        </h1>
+                        <p className="mt-2 text-sm text-slate-500">
+                            Digital Wallet Push API · Enterprise Merchant API · Assurance Mockup
+                        </p>
+                    </header>
+
+                    {/* Main Card */}
+                    <main className="glass-panel animate-slide-up rounded-2xl p-6 shadow-card sm:p-8">
+
+                        {/* Section A — API Security & Merchant Context */}
+                        <SectionHeader
+                            icon="🔐"
+                            title="API Security & Merchant Context"
+                            subtitle="Enterprise OAuth credentials and merchant short-code routing parameters"
+                        />
+
+                        <div className="grid gap-5 sm:grid-cols-2">
+                            <div className="sm:col-span-2">
+                                <FieldLabel htmlFor="apiKey" badge="Header">
+                                    X-API-Key
+                                </FieldLabel>
+                                <input
+                                    id="apiKey"
+                                    type="password"
+                                    placeholder="sk_live_51Nx..."
+                                    className="field-input w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-600"
+                                    autoComplete="off"
+                                />
+                            </div>
+
+                            <div>
+                                <FieldLabel htmlFor="shortCode" badge="Merchant">
+                                    BusinessShortCode
+                                </FieldLabel>
+                                <input
+                                    id="shortCode"
+                                    type="text"
+                                    placeholder="e.g., 400222"
+                                    className="field-input w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-600"
+                                />
+                            </div>
+
+                            <div>
+                                <FieldLabel htmlFor="transactionType" badge="Push">
+                                    TransactionType
+                                </FieldLabel>
+                                <select
+                                    id="transactionType"
+                                    className="field-input w-full cursor-pointer rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100"
+                                >
+                                    <option value="CustomerPayBillOnline">CustomerPayBillOnline</option>
+                                    <option value="CustomerBuyGoodsOnline">CustomerBuyGoodsOnline</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="section-divider my-8"></div>
+
+                        {/* Section B — Transaction Payload Details */}
+                        <SectionHeader
+                            icon="💳"
+                            title="Transaction Payload Details"
+                            subtitle="PartyA mobile wallet, settlement amount, and network resilience simulation profile"
+                        />
+
+                        <div className="grid gap-5 sm:grid-cols-2">
+                            <div>
+                                <FieldLabel htmlFor="phoneNumber" badge="PartyA">
+                                    PartyA (Customer Mobile)
+                                </FieldLabel>
+                                <input
+                                    id="phoneNumber"
+                                    type="tel"
+                                    placeholder="+12025551234"
+                                    className="field-input w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-600"
+                                />
+                            </div>
+
+                            <div>
+                                <FieldLabel htmlFor="amount" badge="USD">
+                                    Amount
+                                </FieldLabel>
+                                <input
+                                    id="amount"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
+                                    className="field-input w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-600"
+                                />
+                            </div>
+
+                            <div>
+                                <FieldLabel htmlFor="accountReference" badge="Ref">
+                                    AccountReference
+                                </FieldLabel>
+                                <input
+                                    id="accountReference"
+                                    type="text"
+                                    placeholder="e.g., INV-2026-08"
+                                    className="field-input w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100 placeholder-slate-600"
+                                />
+                            </div>
+
+                            <div>
+                                <FieldLabel htmlFor="simulationType" badge="QA">
+                                    Network Simulator
+                                </FieldLabel>
+                                <select
+                                    id="simulationType"
+                                    className="field-input w-full cursor-pointer rounded-lg border border-slate-700/80 bg-slate-900/80 px-4 py-3 text-sm text-slate-100"
+                                >
+                                    <option value="NORMAL">NORMAL</option>
+                                    <option value="NETWORK_LAG">NETWORK_LAG (10-second backend delay)</option>
+                                    <option value="GATEWAY_TIMEOUT">GATEWAY_TIMEOUT</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Submit */}
+                        <div className="mt-8 flex flex-col items-center gap-3">
+                            <button
+                                id="processButton"
+                                type="button"
+                                onClick={() => window.processPayment()}
+                                className="btn-stk w-full rounded-xl px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white sm:w-auto sm:min-w-[280px]"
+                            >
+                                Initiate Digital Wallet Push
+                            </button>
+                            <p className="text-[11px] text-slate-600">
+                                Encrypted TLS 1.3 · PCI-DSS Sandbox · Enterprise API v2.0 Protocol
+                            </p>
+                        </div>
+
+                        {/* Status Box — hidden until processPayment fires */}
+                        <div id="statusBox" className={statusClasses} role="status" aria-live="polite">
+                            {status.message}
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="mt-6 text-center text-[11px] text-slate-600">
+                        © 2026 Global Fintech Transaction Core Gateway Assurance Framework · Global Enterprise Deployment
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PaymentGateway />);
+    </script>
+</body>
+</html>
