@@ -1,4 +1,4 @@
-# Deterministic Fintech Gateway Assurance Engine
+# Enterprise-QE-Assurance-Framework
 
 > A reliable automation safety gate for banking transaction testing.
 
