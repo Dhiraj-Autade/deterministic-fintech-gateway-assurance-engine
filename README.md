@@ -2,7 +2,7 @@
 
 > A reliable automation safety gate for banking transaction testing.
 
-**Stack:** Java 11 | Selenium 4 | TestNG 7.9 | RestAssured 5.4 | ExtentReports 5.1
+**Stack:** Java 11 | Maven | Selenium | TestNG | RestAssured 5.4 | ExtentReports 5.1 | Jackson
 
 ## Section 1: Project Overview
 
